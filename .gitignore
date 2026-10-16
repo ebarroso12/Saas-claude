@@ -6,3 +6,10 @@ dist/
 *.log
 coverage/
 .DS_Store
+
+# Padroes sensiveis usados pelo hook de varredura: NUNCA versionar.
+.claude/forbidden-patterns.txt
+
+# Settings pessoais do Claude Code (os do projeto, .claude/settings.json,
+# e os hooks em .claude/hooks/ SAO versionados de proposito).
+.claude/settings.local.json
