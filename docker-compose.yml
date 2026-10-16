@@ -24,6 +24,10 @@ services:
       POSTGRES_DB: kiro
       POSTGRES_USER: kiro
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      # So loopback. Permite `npm run dev` fora do Docker alcancar o banco.
+      # Em producao no VPS, pode remover: o app fala com o db pela rede interna.
+      - "127.0.0.1:5432:5432"
     volumes:
       - kiro-pgdata:/var/lib/postgresql/data
     healthcheck:

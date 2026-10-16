@@ -78,8 +78,16 @@ Dois avisos que custam dinheiro:
 
 ## Começando
 
+**Os comandos, na ordem, estão no [RUNBOOK.md](./RUNBOOK.md)** — trilha local
+(prova que funciona sem tocar no WhatsApp) e trilha VPS, mais o cutover e o
+rollback.
+
+Resumo:
+
 ```bash
 npm install
+export POSTGRES_PASSWORD='...'
+docker compose up -d kiro-db
 cp .env.example .env     # preencha; nada de segredo no repositório
 npm run migrate
 npm run dev
@@ -90,6 +98,7 @@ Verificação:
 ```bash
 npm run typecheck
 npm test
+bash scripts/smoke.sh    # prova o ciclo inteiro, sem WhatsApp
 ```
 
 ## Variáveis de ambiente
