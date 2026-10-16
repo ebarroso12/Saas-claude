@@ -1,0 +1,36 @@
+# Roda ao lado do gateway existente, sem tocar nele.
+# OpenClaw ocupa 18789. Kiro-Evolution ocupa 3040.
+services:
+  kiro-api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3040:3040"   # so loopback; Traefik publica
+    depends_on:
+      kiro-db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kiro-api.rule=Host(`kiro-api.example.com`)"
+      - "traefik.http.routers.kiro-api.entrypoints=websecure"
+      - "traefik.http.routers.kiro-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kiro-api.loadbalancer.server.port=3040"
+
+  kiro-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kiro
+      POSTGRES_USER: kiro
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - kiro-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kiro -d kiro"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  kiro-pgdata:
